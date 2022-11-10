@@ -517,34 +517,46 @@ var ToolMultiPipeRight4 = ToolMulti.extend({
 
 /*
  * -------------------------------------------
+ * HIGHFLEET BLOCKS
+ * -------------------------------------------
+ */
+var bridge = ToolMulti.extend({
+	init: function(x, y, level) {
+		this._super(x, y, level, 4, 4, 'soil');
+		this.setImage(images.objects, 10000, 1);
+	},
+}, 'bridge'); // bridge1x1
+
+/*
+ * -------------------------------------------
  * TOOLBOX OBJECTS (BASED ON REAL OBJECTS - BUT WITH DIFFERENT ICON)
  *
  * IMPLEMENTATIONS OF THE "TOOLMULTI" CLASS
  * -------------------------------------------
  */
 
- var MultipleCoinBoxEdit = ToolMulti.extend({
+var MultipleCoinBoxEdit = ToolMulti.extend({
 	init: function(x, y, level) {
 		this._super(x, y, level, 1, 1, 'multiple_coinbox');
 		this.setImage(images.objects, 956, 574);
 	},
 }, 'multiple_coinbox-1x1');
 
- var CoinBoxEdit = ToolMulti.extend({
+var CoinBoxEdit = ToolMulti.extend({
 	init: function(x, y, level) {
 		this._super(x, y, level, 1, 1, 'coinbox');
 		this.setImage(images.objects, 990, 574);
 	},
 }, 'coinbox-1x1');
 
- var MushroomBoxEdit = ToolMulti.extend({
+var MushroomBoxEdit = ToolMulti.extend({
 	init: function(x, y, level) {
 		this._super(x, y, level, 1, 1, 'mushroombox');
 		this.setImage(images.objects, 956, 540);
 	},
 }, 'mushroombox-1x1');
 
- var StarBoxEdit = ToolMulti.extend({
+var StarBoxEdit = ToolMulti.extend({
 	init: function(x, y, level) {
 		this._super(x, y, level, 1, 1, 'starbox');
 		this.setImage(images.objects, 990, 540);

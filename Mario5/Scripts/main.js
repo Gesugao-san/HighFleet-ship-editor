@@ -874,6 +874,18 @@ var LeftPipeSoil = Decoration.extend({
 
 /*
  * -------------------------------------------
+ * HIGHFLEET BLOCKS
+ * -------------------------------------------
+ */
+var bridge = Decoration.extend({
+	init: function(x, y, level) {
+		this._super(x, y, level);
+		this.setImage(images.objects, 888, 438);
+	},
+}, 'soil'); // bridge1x1
+
+/*
+ * -------------------------------------------
  * ITEM CLASS
  * -------------------------------------------
  */

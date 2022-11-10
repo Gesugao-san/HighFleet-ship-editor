@@ -6,13 +6,14 @@
  * *****
  */
 
-var AUDIOPATH  = 'Content/audio/';
-var BASEPATH   = 'Content/';
-var DIV        = '<div />';
-var CANVAS     = '<canvas />';
-var CLS_FIGURE = 'figure';
-var CLS_MATTER = 'matter';
-var CLS_TOOL   = 'tool';
+var HIGHFLEETPATH = 'HighFleet/';
+var AUDIOPATH     = 'Content/audio/';
+var BASEPATH      = 'Content/';
+var DIV           = '<div />';
+var CANVAS        = '<canvas />';
+var CLS_FIGURE    = 'figure';
+var CLS_MATTER    = 'matter';
+var CLS_TOOL      = 'tool';
 
 /*
  * -------------------------------------------
@@ -101,7 +102,8 @@ var images = {
 	sprites : BASEPATH + 'mario-sprites.png',
 	objects : BASEPATH + 'mario-objects.png',
 	peach   : BASEPATH + 'mario-peach.png',
-	ghost   : BASEPATH + 'mario-ghost.png'
+	ghost   : BASEPATH + 'mario-ghost.png',
+	ships   : HIGHFLEETPATH + 'Ships1.png'
 };
 
 /*
