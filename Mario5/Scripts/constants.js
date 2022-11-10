@@ -63,8 +63,8 @@ var size_states = {
 * -------------------------------------------
 */
 var mushroom_mode = {
-    mushroom: 0,
-    plant: 1
+	mushroom: 0,
+	plant: 1
 };
 
 /*
@@ -73,8 +73,8 @@ var mushroom_mode = {
 * -------------------------------------------
 */
 var death_modes = {
-    normal: 0,
-    shell: 1
+	normal: 0,
+	shell: 1
 };
 
 /*
@@ -152,15 +152,14 @@ var c2u = function(s) {
  * -------------------------------------------
  */
 var q2q = function(figure, opponent) {
-	if(figure.x > opponent.x + 16)
-		return false;		
-	else if(figure.x + 16 < opponent.x)
-		return false;		
-	else if(figure.y + figure.state * 32 - 4 < opponent.y)
-		return false;		
-	else if(figure.y + 4 > opponent.y + opponent.state * 32)
+	if (figure.x > opponent.x + 16)
 		return false;
-		
+	else if (figure.x + 16 < opponent.x)
+		return false;
+	else if (figure.y + figure.state * 32 - 4 < opponent.y)
+		return false;
+	else if (figure.y + 4 > opponent.y + opponent.state * 32)
+		return false;
 	return true;
 };
 
@@ -170,10 +169,10 @@ var q2q = function(figure, opponent) {
  * -------------------------------------------
  */
 Math.sign = function(x) {
-	if(x > 0)
+	if (x > 0)
 		return 1;
-	else if(x < 0)
+	else if (x < 0)
 		return -1;
-		
 	return 0;
 };
+

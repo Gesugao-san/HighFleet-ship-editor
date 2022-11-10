@@ -41,13 +41,13 @@ var Base = Class.extend({
 		return { width: this.width, height: this.height };
 	},
 	setupFrames: function(fps, frames, rewind, id) {
-		if(id) {
-			if(this.frameID === id)
+		if (id) {
+			if (this.frameID === id)
 				return true;
-			
+
 			this.frameID = id;
 		}
-		
+
 		this.frameCount = 0;
 		this.currentFrame = 0;
 		this.frameTick = frames ? (1000 / fps / constants.interval) : 0;
@@ -62,15 +62,15 @@ var Base = Class.extend({
 		this.frameTick = 0;
 	},
 	playFrame: function() {
-		if(this.frameTick && this.view) {
+		if (this.frameTick && this.view) {
 			this.frameCount++;
-			
-			if(this.frameCount >= this.frameTick) {			
+
+			if (this.frameCount >= this.frameTick) {
 				this.frameCount = 0;
-				
-				if(this.currentFrame === this.frames)
+
+				if (this.currentFrame === this.frames)
 					this.currentFrame = 0;
-					
+
 				var $el = this.view;
 				$el.css('background-position', '-' + (this.image.x + this.width * ((this.rewindFrames ? this.frames - 1 : 0) - this.currentFrame)) + 'px -' + this.image.y + 'px');
 				this.currentFrame++;
@@ -104,36 +104,36 @@ var Level = Base.extend({
 		this.world = $('#' + id);
 		this.nextCycles = 0;
 		this._super(0, 0);
-        this.input = [];
+		this.input = [];
 		this.reset();
 		this.coinGauge = new Gauge('coin', 0, 0, 10, 4, true);
 		this.liveGauge = new Gauge('live', 0, 48, 6, 6, true);
 	},
 	reload: function() {
 		var settings = {};
-		
-		if(this.mario) {
+
+		if (this.mario) {
 			settings.lifes = this.mario.lifes - 1;
 			settings.coins = this.mario.coins;
-			
-			if(settings.lifes < 0) {				
+
+			if (settings.lifes < 0) {
 				this.playMusic('gameOver');
 				$(DIV).appendTo(this.world).addClass('gameover').css('left', this.x).html('Game Over');
 				this.deadCycles = Math.floor(5000 / constants.interval);
 				return;
 			}
 		}
-		
+
 		this.pause();
-		this.reset();		
+		this.reset();
 		this.load(this.raw);
-		
-		if(this.mario) {
+
+		if (this.mario) {
 			this.mario.setLifes(settings.lifes || 0);
 			this.mario.setCoins(settings.coins || 0);
-            this.invokeSameCallback();
+			this.invokeSameCallback();
 		}
-		
+
 		this.start();
 	},
 	setSameCallback: function(callback) {
@@ -143,21 +143,21 @@ var Level = Base.extend({
 		this.nextCallback = callback;
 	},
 	invokeNextCallback: function() {
-		if(this.nextCycles)
+		if (this.nextCycles)
 			return;
-		
-		if(this.nextCallback)
+
+		if (this.nextCallback)
 			this.nextCallback();
 	},
 	invokeDeadCallback: function() {
-		if(this.deadCycles)
+		if (this.deadCycles)
 			return;
-			
-		if(this.deadCallback)
+
+		if (this.deadCallback)
 			this.deadCallback();
 	},
 	invokeSameCallback: function() {
-		if(this.sameCallback)
+		if (this.sameCallback)
 			this.sameCallback();
 	},
 	setDeadCallback: function(callback) {
@@ -165,18 +165,18 @@ var Level = Base.extend({
 	},
 	exportSaveGame: function() {
 		var settings = {};
-		
-		if(this.mario) {
+
+		if (this.mario) {
 			settings.lifes = this.mario.lifes;
 			settings.coins = this.mario.coins;
 			settings.state = this.mario.state;
 			settings.marioState = this.mario.marioState;
 		}
-		
+
 		return settings;
 	},
 	importSaveGame: function(settings) {
-		if(this.mario) {
+		if (this.mario) {
 			this.mario.setLifes(settings.lifes || 0);
 			this.mario.setCoins(settings.coins || 0);
 			this.mario.setState(settings.state || size_states.small);
@@ -186,32 +186,32 @@ var Level = Base.extend({
 	setInput: function(input) {
 		this.input.push(input);
 	},
-    bindInput: function() {
-        for(var i = this.input.length; i--; )
+	bindInput: function() {
+		for(var i = this.input.length; i--; )
 			this.input[i].bind();
-    },
+	},
 	clearInput: function() {
 		for(var i = this.input.length; i--; )
 			this.input[i].unbind();
 	},
 	getInput: function() {
-        var actions = { left: false, down: false, right: false, up: false, accelerate: false };
+		var actions = { left: false, down: false, right: false, up: false, accelerate: false };
 
-        for(var i = this.input.length; i--; ) {
-		    for(var action in actions)
-                actions[action] = actions[action] || (this.input[i])[action];
-        }
-		
+		for(var i = this.input.length; i--; ) {
+			for(var action in actions)
+				actions[action] = actions[action] || (this.input[i])[action];
+		}
+
 		return actions;
 	},
 	load: function(level) {
-		if(this.active) {
-			if(this.loop)
+		if (this.active) {
+			if (this.loop)
 				this.pause();
 
 			this.reset();
 		}
-			
+
 		this.setPosition(0, 0);
 		this.setSize(level.width * 32, level.height * 32);
 		this.setImage(level.background);
@@ -219,30 +219,30 @@ var Level = Base.extend({
 		this.id = level.id;
 		this.active = true;
 		var data = level.data;
-        level.data.splice(level.width);
-		
+		level.data.splice(level.width);
+
 		for(var i = 0; i < level.width; i++) {
 			var t = [];
-			
+
 			for(var j = 0; j < level.height; j++)
 				t.push('');
-			
+
 			this.obstacles.push(t);
 		}
-		
+
 		for(var i = 0, width = data.length; i < width; i++) {
 			var col = data[i];
-			
+
 			for(var j = 0, height = col.length; j < height; j++) {
-                var value = col[j];
+				var value = col[j];
 
-                if(/^fig_/.test(value))
-                    value = value.substr(4);
+				if (/^fig_/.test(value))
+					value = value.substr(4);
 
-                if(/_\dx\d$/.test(value))
-                    value = value.substr(0, value.length - 4);
+				if (/_\dx\d$/.test(value))
+					value = value.substr(0, value.length - 4);
 
-				if(reflection[value])
+				if (reflection[value])
 					new (reflection[value])(i * 32, (height - j - 1) * 32, this);
 			}
 		}
@@ -260,11 +260,11 @@ var Level = Base.extend({
 		this.sounds = manager;
 	},
 	playSound: function(label) {
-		if(this.sounds)
+		if (this.sounds)
 			this.sounds.play(label);
 	},
 	playMusic: function(label) {
-		if(this.sounds)
+		if (this.sounds)
 			this.sounds.sideMusic(label);
 	},
 	reset: function() {
@@ -277,70 +277,70 @@ var Level = Base.extend({
 		this.mario = undefined;
 	},
 	tick: function() {
-		if(this.nextCycles) {
+		if (this.nextCycles) {
 			this.nextCycles--;
-			this.invokeNextCallback();			
+			this.invokeNextCallback();
 			return;
 		}
-		
-		if(this.deadCycles) {
+
+		if (this.deadCycles) {
 			this.deadCycles--;
 			this.invokeDeadCallback();
 			return;
 		}
-		
+
 		var i = 0, j = 0, figure, opponent;
-		
+
 		for(i = this.figures.length; i--; ) {
 			figure = this.figures[i];
-			
-			if(figure.dead) {
-				if(!figure.death()) {
-					if(figure instanceof Mario)
+
+			if (figure.dead) {
+				if (!figure.death()) {
+					if (figure instanceof Mario)
 						return this.reload();
-						
+
 					figure.view.remove();
 					this.figures.splice(i, 1);
 				} else
 					figure.playFrame();
 			} else {
-				if(i) {
+				if (i) {
 					for(j = i; j--; ) {
-						if(figure.dead)
+						if (figure.dead)
 							break;
-							
+
 						opponent = this.figures[j];
-						
-						if(!opponent.dead && q2q(figure, opponent)) {
+
+						if (!opponent.dead && q2q(figure, opponent)) {
 							figure.hit(opponent);
 							opponent.hit(figure);
 						}
 					}
 				}
 			}
-			
-			if(!figure.dead) {
+
+			if (!figure.dead) {
 				figure.move();
 				figure.playFrame();
 			}
 		}
-		
+
 		for(i = this.items.length; i--; )
 			this.items[i].playFrame();
-		
+
 		this.coinGauge.playFrame();
 		this.liveGauge.playFrame();
 	},
 	start: function() {
 		var me = this;
-        me.bindInput();
+		me.bindInput();
 		me.loop = setInterval(function() {
 			me.tick.apply(me);
 		}, constants.interval);
 	},
 	pause: function() {
 		clearInterval(this.loop);
-        this.clearInput();
+		this.clearInput();
 		this.loop = undefined;
 	},
 	setPosition: function(x, y) {
@@ -409,8 +409,8 @@ var Figure = Base.extend({
 	setGridPosition: function(x, y) {
 		this.i = Math.floor((x + 16) / 32);
 		this.j = Math.ceil(this.level.getGridHeight() - 1 - y / 32);
-		
-		if(this.j > this.level.getGridHeight())
+
+		if (this.j > this.level.getGridHeight())
 			this.die();
 	},
 	getGridPosition: function(x, y) {
@@ -419,116 +419,116 @@ var Figure = Base.extend({
 	setVelocity: function(vx, vy) {
 		this.vx = vx;
 		this.vy = vy;
-		
-		if(vx > 0)
+
+		if (vx > 0)
 			this.direction = directions.right;
-		else if(vx < 0)
+		else if (vx < 0)
 			this.direction = directions.left;
 	},
 	getVelocity: function() {
 		return { vx : this.vx, vy : this.vy };
 	},
 	hit: function(opponent) {
-		
+
 	},
 	collides: function(is, ie, js, je, blocking) {
 		var isHero = this instanceof Hero;
 		js = Math.max(js, 0);
-		
-		if(is < 0 || ie >= this.level.obstacles.length)
+
+		if (is < 0 || ie >= this.level.obstacles.length)
 			return true;
-			
-		if(je >= this.level.getGridHeight())
+
+		if (je >= this.level.getGridHeight())
 			return false;
-			
+
 		for(var i = is; i <= ie; i++) {
 			for(var j = je; j >= js; j--) {
 				var obj = this.level.obstacles[i][j];
-				
-				if(obj) {
-					if(obj instanceof Item && isHero && (blocking === ground_blocking.bottom || obj.blocking === ground_blocking.none))
+
+				if (obj) {
+					if (obj instanceof Item && isHero && (blocking === ground_blocking.bottom || obj.blocking === ground_blocking.none))
 						obj.activate(this);
-					
-					if((obj.blocking & blocking) === blocking)
+
+					if ((obj.blocking & blocking) === blocking)
 						return true;
 				}
 			}
 		}
-		
+
 		return false;
 	},
 	move: function() {
 		var vx = this.vx;
 		var vy = this.vy - constants.gravity;
-		
+
 		var s = this.state;
-		
+
 		var x = this.x;
 		var y = this.y;
-		
+
 		var dx = Math.sign(vx);
 		var dy = Math.sign(vy);
-		
+
 		var is = this.i;
 		var ie = is;
-		
+
 		var js = Math.ceil(this.level.getGridHeight() - s - (y + 31) / 32);
 		var je = this.j;
-		
+
 		var d = 0, b = ground_blocking.none;
 		var onground = false;
 		var t = Math.floor((x + 16 + vx) / 32);
-		
-		if(dx > 0) {
+
+		if (dx > 0) {
 			d = t - ie;
 			t = ie;
 			b = ground_blocking.left;
-		} else if(dx < 0) {
+		} else if (dx < 0) {
 			d = is - t;
 			t = is;
 			b = ground_blocking.right;
 		}
-		
+
 		x += vx;
-		
+
 		for(var i = 0; i < d; i++) {
-			if(this.collides(t + dx, t + dx, js, je, b)) {
+			if (this.collides(t + dx, t + dx, js, je, b)) {
 				vx = 0;
 				x = t * 32 + 15 * dx;
 				break;
 			}
-			
+
 			t += dx;
 			is += dx;
 			ie += dx;
 		}
-		
-		if(dy > 0) {
+
+		if (dy > 0) {
 			t = Math.ceil(this.level.getGridHeight() - s - (y + 31 + vy) / 32);
 			d = js - t;
 			t = js;
 			b = ground_blocking.bottom;
-		} else if(dy < 0) {
+		} else if (dy < 0) {
 			t = Math.ceil(this.level.getGridHeight() - 1 - (y + vy) / 32);
 			d = t - je;
 			t = je;
 			b = ground_blocking.top;
 		} else
 			d = 0;
-		
+
 		y += vy;
-		
+
 		for(var i = 0; i < d; i++) {
-			if(this.collides(is, ie, t - dy, t - dy, b)) {
+			if (this.collides(is, ie, t - dy, t - dy, b)) {
 				onground = dy < 0;
 				vy = 0;
 				y = this.level.height - (t + 1) * 32 - (dy > 0 ? (s - 1) * 32 : 0);
 				break;
 			}
-			
+
 			t -= dy;
 		}
-		
+
 		this.onground = onground;
 		this.setVelocity(vx, vy);
 		this.setPosition(x, y);
@@ -891,7 +891,7 @@ var Item = Matter.extend({
 		this.backDecoration = this.detectBackDecoration(level);
 	},
 	detectBackDecoration: function(level) {
-		if(!this.level.raw)
+		if (!this.level.raw)
 			return;
 
 		var name = 'soil';
@@ -903,38 +903,38 @@ var Item = Matter.extend({
 				var x = Math.floor(this.x / 32);
 				var y = Math.floor(14 - this.y / 32);
 
-				if(k === 0)
+				if (k === 0)
 					x += direction[l];
 				else
 					y += direction[l];
 
-				if(x < 0 || x >= this.level.raw.width || y < 0 || y > 14)
+				if (x < 0 || x >= this.level.raw.width || y < 0 || y > 14)
 					continue;
 
-				if(this.level.raw.data[x][y].indexOf(name) > -1) {
+				if (this.level.raw.data[x][y].indexOf(name) > -1) {
 					count++;
 				} else {
 					var success = true;
 
 					while(this.level.raw.data[x][y] === 'coin') {
-						if(k === 0)
+						if (k === 0)
 							x += direction[l];
 						else
 							y += direction[l];
 
-						if(x < 0 || x >= this.level.raw.width || y < 0 || y > 14) {
+						if (x < 0 || x >= this.level.raw.width || y < 0 || y > 14) {
 							success = false;
 							break;
 						}
 					}
 
-					if(success && this.level.raw.data[x][y].indexOf(name) > -1)
+					if (success && this.level.raw.data[x][y].indexOf(name) > -1)
 						count++;
 				}
 			}
 		}
 
-		if(count > 1) {
+		if (count > 1) {
 			return $(DIV).addClass(CLS_MATTER).css({
 				backgroundImage : c2u(images.objects),
 				backgroundPosition : '-888px -438px',
@@ -952,12 +952,12 @@ var Item = Matter.extend({
 	},
 	bounce: function() {
 		this.isBouncing = true;
-		
+
 		for(var i = this.level.figures.length; i--; ) {
 			var fig = this.level.figures[i];
-			
-			if(fig.y === this.y + 32 && fig.x >= this.x - 16 && fig.x <= this.x + 16) {
-				if(fig instanceof ItemFigure) {
+
+			if (fig.y === this.y + 32 && fig.x >= this.x - 16 && fig.x <= this.x + 16) {
+				if (fig instanceof ItemFigure) {
 					fig.setVelocity(fig.vx, constants.bounce);
 				} else {
 					fig.die();
@@ -966,18 +966,18 @@ var Item = Matter.extend({
 		}
 	},
 	playFrame: function() {
-		if(this.isBouncing) {
+		if (this.isBouncing) {
 			this.view.css({ 'bottom' : (this.bounceDir > 0 ? '+' : '-') + '=' + this.bounceStep + 'px' });
 			this.bounceCount += this.bounceDir;
-			
-			if(this.bounceCount === this.bounceFrames) {
+
+			if (this.bounceCount === this.bounceFrames) {
 				this.bounceDir = -1;
-			} else if(this.bounceCount === 0) {
+			} else if (this.bounceCount === 0) {
 				this.bounceDir = 1;
 				this.isBouncing = false;
 			}
 		}
-		
+
 		this._super();
 	},
 });
@@ -994,7 +994,7 @@ var Coin = Item.extend({
 		this.setupFrames(10, 4, true);
 	},
 	activate: function(from) {
-		if(!this.activated) {
+		if (!this.activated) {
 			this.level.playSound('coin');
 			from.addCoin();
 			this.remove();
@@ -1037,33 +1037,33 @@ var CoinBox = Item.extend({
 	setAmount: function(amount) {
 		this.items = [];
 		this.actors = [];
-		
+
 		for(var i = 0; i < amount; i++)
 			this.items.push(new CoinBoxCoin(this.x, this.y, this.level));
 	},
 	activate: function(from) {
-		if(!this.isBouncing) {
-			if(this.items.length) {
+		if (!this.isBouncing) {
+			if (this.items.length) {
 				this.bounce();
 				var coin = this.items.pop();
 				coin.activate(from);
 				this.actors.push(coin);
-				
-				if(!this.items.length)
+
+				if (!this.items.length)
 					this.setImage(images.objects, 514, 194);
 			}
 		}
-			
+
 		this._super(from);
 	},
 	playFrame: function() {
 		for(var i = this.actors.length; i--; ) {
-			if(this.actors[i].act()) {
+			if (this.actors[i].act()) {
 				this.actors[i].view.remove();
 				this.actors.splice(i, 1);
 			}
 		}
-		
+
 		this._super();
 	},
 }, 'coinbox');
@@ -1097,13 +1097,13 @@ var StarBox = Item.extend({
 		this.setupFrames(8, 4, false);
 	},
 	activate: function(from) {
-		if(!this.activated) {
+		if (!this.activated) {
 			this.star.release();
 			this.clearFrames();
 			this.bounce();
 			this.setImage(images.objects, 514, 194);
 		}
-		
+
 		this._super(from);
 	},
 }, 'starbox');
@@ -1127,16 +1127,16 @@ var Star = ItemFigure.extend({
 		return false;
 	},
 	move: function() {
-		if(this.active) {
+		if (this.active) {
 			this.vy += this.vy <= -constants.star_vy ? constants.gravity : constants.gravity / 2;
 			this._super();
 		}
-		
-		if(this.taken)
+
+		if (this.taken)
 			this.taken--;
 	},
 	hit: function(opponent) {
-		if(!this.taken && this.active && opponent instanceof Mario) {
+		if (!this.taken && this.active && opponent instanceof Mario) {
 			opponent.invincible();
 			this.die();
 		}
@@ -1157,17 +1157,17 @@ var MushroomBox = Item.extend({
 		this.setupFrames(8, 4, false);
 	},
 	activate: function(from) {
-		if(!this.activated) {
-			if(from.state === size_states.small || this.max_mode === mushroom_mode.mushroom)
+		if (!this.activated) {
+			if (from.state === size_states.small || this.max_mode === mushroom_mode.mushroom)
 				this.mushroom.release(mushroom_mode.mushroom);
 			else
 				this.mushroom.release(mushroom_mode.plant);
-			
+
 			this.clearFrames();
 			this.bounce();
 			this.setImage(images.objects, 514, 194);
 		}
-			
+
 		this._super(from);
 	},
 }, 'mushroombox');
@@ -1183,39 +1183,39 @@ var Mushroom = ItemFigure.extend({
 	release: function(mode) {
 		this.released = 4;
 		this.level.playSound('mushroom');
-		
-		if(mode === mushroom_mode.plant)
+
+		if (mode === mushroom_mode.plant)
 			this.setImage(images.objects, 548, 60);
-			
+
 		this.mode = mode;
 		this.view.show();
 	},
 	move: function() {
-		if(this.active) {
+		if (this.active) {
 			this._super();
-		
-			if(this.mode === mushroom_mode.mushroom && this.vx === 0)
+
+			if (this.mode === mushroom_mode.mushroom && this.vx === 0)
 				this.setVelocity(this.direction === directions.right ? -constants.mushroom_v : constants.mushroom_v, this.vy);
-		} else if(this.released) {
+		} else if (this.released) {
 			this.released--;
 			this.setPosition(this.x, this.y + 8);
-			
-			if(!this.released) {
+
+			if (!this.released) {
 				this.active = true;
 				this.view.css('z-index', 99);
-				
-				if(this.mode === mushroom_mode.mushroom)
+
+				if (this.mode === mushroom_mode.mushroom)
 					this.setVelocity(constants.mushroom_v, constants.gravity);
 			}
 		}
 	},
 	hit: function(opponent) {
-		if(this.active && opponent instanceof Mario) {
-			if(this.mode === mushroom_mode.mushroom)
+		if (this.active && opponent instanceof Mario) {
+			if (this.mode === mushroom_mode.mushroom)
 				opponent.grow();
-			else if(this.mode === mushroom_mode.plant)
+			else if (this.mode === mushroom_mode.plant)
 				opponent.shooter();
-				
+
 			this.die();
 		}
 	},
@@ -1240,23 +1240,23 @@ var Bullet = Figure.extend({
 	},
 	setVelocity: function(vx, vy) {
 		this._super(vx, vy);
-	
-		if(this.vx === 0) {
+
+		if (this.vx === 0) {
 			var s = this.speed * Math.sign(this.speed);
 			this.vx = this.direction === directions.right ? -s : s;
 		}
-		
-		if(this.onground)
+
+		if (this.onground)
 			this.vy = constants.bounce;
 	},
 	move: function() {
-		if(--this.life)
+		if (--this.life)
 			this._super();
 		else
 			this.die();
 	},
 	hit: function(opponent) {
-		if(!(opponent instanceof Mario || opponent instanceof TurtleShell)) {
+		if (!(opponent instanceof Mario || opponent instanceof TurtleShell)) {
 			opponent.die();
 			this.die();
 		}
@@ -1316,10 +1316,10 @@ var Mario = Hero.extend({
 		this.marioState = state;
 	},
 	setState: function(state) {
-		if(state !== this.state) {
+		if (state !== this.state) {
 			this.setMarioState(mario_states.normal);
 
-			if(state === size_states.small)
+			if (state === size_states.small)
 				this.setSize(32, 46);
 			else
 				this.setSize(32, 62);
@@ -1330,24 +1330,24 @@ var Mario = Hero.extend({
 	setPosition: function(x, y) {
 		this._super(x, y);
 		var r = this.level.width - 640;
-		var w = (this.x <= 210) ? 0 : ((this.x >= this.level.width - 230) ? r : r / (this.level.width - 440) * (this.x - 210));		
+		var w = (this.x <= 210) ? 0 : ((this.x >= this.level.width - 230) ? r : r / (this.level.width - 440) * (this.x - 210));
 		this.level.setParallax(w);
 
-		if(this.onground && this.x >= this.level.width - 128)
+		if (this.onground && this.x >= this.level.width - 128)
 			this.victory();
 	},
 	input: function(keys) {
 		this.fast = keys.accelerate;
 		this.crouching = keys.down;
-		
-		if(!this.crouching) {
-			if(this.onground && keys.up)
+
+		if (!this.crouching) {
+			if (this.onground && keys.up)
 				this.jump();
-				
-			if(keys.accelerate && this.marioState === mario_states.fire)
+
+			if (keys.accelerate && this.marioState === mario_states.fire)
 				this.shoot();
-				
-			if(keys.right || keys.left)
+
+			if (keys.right || keys.left)
 				this.walk(keys.left, keys.accelerate);
 			else
 				this.vx = 0;
@@ -1356,43 +1356,43 @@ var Mario = Hero.extend({
 	victory: function() {
 		this.level.playMusic('success');
 		this.clearFrames();
-        this.blinking = 0;
-        this.invulnerable = 0;
+		this.blinking = 0;
+		this.invulnerable = 0;
 		this.view.show();
 		var showy;
-		
-		if(this.state === size_states.small)
+
+		if (this.state === size_states.small)
 			showy = 0;
 		else {
-			if(this.marioState === mario_states.normal)
+			if (this.marioState === mario_states.normal)
 				showy = 88;
-			else if(this.marioState === mario_states.fire)
+			else if (this.marioState === mario_states.fire)
 				showy = 150;
 		}
-		
+
 		this.setImage(images.sprites, 384, showy);
 		this.level.next();
 	},
 	shoot: function() {
-		if(!this.cooldown) {
+		if (!this.cooldown) {
 			this.cooldown = constants.cooldown;
 			this.level.playSound('shoot');
 			new Bullet(this);
 		}
 	},
 	setVelocity: function(vx, vy) {
-		if(this.crouching) {
+		if (this.crouching) {
 			vx = 0;
 			this.crouch();
 		} else {
-			if(this.onground && vx > 0)
+			if (this.onground && vx > 0)
 				this.walkRight();
-			else if(this.onground && vx < 0)
+			else if (this.onground && vx < 0)
 				this.walkLeft();
 			else
 				this.stand();
 		}
-	
+
 		this._super(vx, vy);
 	},
 	blink: function(times) {
@@ -1405,47 +1405,47 @@ var Mario = Hero.extend({
 		this.blink(Math.ceil(this.deadly / (2 * constants.blinkfactor)));
 	},
 	grow: function() {
-		if(this.state === size_states.small) {
+		if (this.state === size_states.small) {
 			this.level.playSound('grow');
 			this.setState(size_states.big);
 			this.blink(3);
 		}
 	},
 	shooter: function() {
-		if(this.state === size_states.small)
+		if (this.state === size_states.small)
 			this.grow();
 		else
 			this.level.playSound('grow');
-			
+
 		this.setMarioState(mario_states.fire);
 	},
 	walk: function(reverse, fast) {
 		this.vx = constants.walking_v * (fast ? 2 : 1) * (reverse ? - 1 : 1);
 	},
 	walkRight: function() {
-		if(this.state === size_states.small) {
-			if(!this.setupFrames(8, 2, false, 'WalkRightSmall'))
+		if (this.state === size_states.small) {
+			if (!this.setupFrames(8, 2, false, 'WalkRightSmall'))
 				this.setImage(images.sprites, 32, 0);
 		} else {
-			if(this.marioState === mario_states.normal) {
-				if(!this.setupFrames(9, 2, false, 'WalkRightBig'))
+			if (this.marioState === mario_states.normal) {
+				if (!this.setupFrames(9, 2, false, 'WalkRightBig'))
 					this.setImage(images.sprites, 32, 88);
-			} else if(this.marioState === mario_states.fire) {
-				if(!this.setupFrames(9, 2, false, 'WalkRightFire'))
+			} else if (this.marioState === mario_states.fire) {
+				if (!this.setupFrames(9, 2, false, 'WalkRightFire'))
 					this.setImage(images.sprites, 32, 150);
 			}
 		}
 	},
 	walkLeft: function() {
-		if(this.state === size_states.small) {
-			if(!this.setupFrames(8, 2, false, 'WalkLeftSmall'))
+		if (this.state === size_states.small) {
+			if (!this.setupFrames(8, 2, false, 'WalkLeftSmall'))
 				this.setImage(images.sprites, 288, 0);
 		} else {
-			if(this.marioState === mario_states.normal) {
-				if(!this.setupFrames(9, 2, false, 'WalkLeftBig'))
+			if (this.marioState === mario_states.normal) {
+				if (!this.setupFrames(9, 2, false, 'WalkLeftBig'))
 					this.setImage(images.sprites, 288, 88);
-			} else if(this.marioState === mario_states.fire) {
-				if(!this.setupFrames(9, 2, false, 'WalkLeftFire'))
+			} else if (this.marioState === mario_states.fire) {
+				if (!this.setupFrames(9, 2, false, 'WalkLeftFire'))
 					this.setImage(images.sprites, 288, 150);
 			}
 		}
@@ -1473,29 +1473,29 @@ var Mario = Hero.extend({
 	addCoin: function() {
 		this.setCoins(this.coins + 1);
 	},
-	playFrame: function() {		
-		if(this.blinking) {
-			if(this.blinking % constants.blinkfactor === 0)
+	playFrame: function() {
+		if (this.blinking) {
+			if (this.blinking % constants.blinkfactor === 0)
 				this.view.toggle();
-				
+
 			this.blinking--;
 		}
-		
-		if(this.cooldown)
+
+		if (this.cooldown)
 			this.cooldown--;
-		
-		if(this.deadly)
+
+		if (this.deadly)
 			this.deadly--;
-		
-		if(this.invulnerable)
+
+		if (this.invulnerable)
 			this.invulnerable--;
-		
+
 		this._super();
 	},
 	setCoins: function(coins) {
 		this.coins = coins;
-		
-		if(this.coins >= constants.max_coins) {
+
+		if (this.coins >= constants.max_coins) {
 			this.addLife()
 			this.coins -= constants.max_coins;
 		}
@@ -1511,22 +1511,22 @@ var Mario = Hero.extend({
 		this.level.world.parent().children('#liveNumber').text(this.lifes);
 	},
 	death: function() {
-		if(this.deathBeginWait) {
+		if (this.deathBeginWait) {
 			this.deathBeginWait--;
 			return true;
 		}
-		
-		if(this.deathEndWait)
+
+		if (this.deathEndWait)
 			return --this.deathEndWait;
-		
+
 		this.view.css({ 'bottom' : (this.deathDir > 0 ? '+' : '-') + '=' + (this.deathDir > 0 ? this.deathStepUp : this.deathStepDown) + 'px' });
 		this.deathCount += this.deathDir;
-		
-		if(this.deathCount === this.deathFrames)
+
+		if (this.deathCount === this.deathFrames)
 			this.deathDir = -1;
-		else if(this.deathCount === 0)
+		else if (this.deathCount === 0)
 			this.deathEndWait = Math.floor(1800 / constants.interval);
-			
+
 		return true;
 	},
 	die: function() {
@@ -1539,17 +1539,17 @@ var Mario = Hero.extend({
 		this._super();
 	},
 	hurt: function(from) {
-		if(this.deadly)
+		if (this.deadly)
 			from.die();
-		else if(this.invulnerable)
+		else if (this.invulnerable)
 			return;
-		else if(this.state === size_states.small) {
+		else if (this.state === size_states.small) {
 			this.die();
 		} else {
 			this.invulnerable = Math.floor(constants.invulnerable / constants.interval);
 			this.blink(Math.ceil(this.invulnerable / (2 * constants.blinkfactor)));
 			this.setState(size_states.small);
-			this.level.playSound('hurt');			
+			this.level.playSound('hurt');
 		}
 	},
 }, 'mario');
@@ -1569,12 +1569,12 @@ var Peach = Hero.extend({
 	},
 	setVelocity: function(vx, vy) {
 		this._super(vx, vy);
-		
-        if(vx !== 0) {
-			if(!this.setupFrames(6, 4, false, 'Walk'))
+
+		if (vx !== 0) {
+			if (!this.setupFrames(6, 4, false, 'Walk'))
 				this.setImage(images.peach, 138, 80);
-		} else if(this.frameTick) {
-            this.clearFrames();
+		} else if (this.frameTick) {
+			this.clearFrames();
 			this.setImage(images.peach, 0, 80);
 		}
 	},
@@ -1594,12 +1594,12 @@ var BigMario = Hero.extend({
 	},
 	setVelocity: function(vx, vy) {
 		this._super(vx, vy);
-		
-        if(vx !== 0) {
-			if(!this.setupFrames(9, 2, false, 'WalkRightBig'))
+
+		if (vx !== 0) {
+			if (!this.setupFrames(9, 2, false, 'WalkRightBig'))
 				this.setImage(images.sprites, 32, 88);
-		} else if(this.frameTick) {
-            this.clearFrames();
+		} else if (this.frameTick) {
+			this.clearFrames();
 			this.setImage(images.sprites, 0, 88);
 		}
 	},
@@ -1619,33 +1619,33 @@ var Enemy = Figure.extend({
 		this.invisible = true;
 		this.view.hide();
 	},
-	show: function() {	
+	show: function() {
 		this.invisible = false;
 		this.view.show();
 	},
 	move: function() {
-		if(!this.invisible) {
+		if (!this.invisible) {
 			this._super();
-		
-			if(this.vx === 0) {
+
+			if (this.vx === 0) {
 				var s = this.speed * Math.sign(this.speed);
 				this.setVelocity(this.direction === directions.right ? -s : s, this.vy);
 			}
 		}
 	},
 	collides: function(is, ie, js, je, blocking) {
-		if(this.j + 1 < this.level.getGridHeight()) {
+		if (this.j + 1 < this.level.getGridHeight()) {
 			for(var i = is; i <= ie; i++) {
-				if(i < 0 || i >= this.level.getGridWidth())
+				if (i < 0 || i >= this.level.getGridWidth())
 					return true;
-					
+
 				var obj = this.level.obstacles[i][this.j + 1];
-				
-				if(!obj || (obj.blocking & ground_blocking.top) !== ground_blocking.top)
+
+				if (!obj || (obj.blocking & ground_blocking.top) !== ground_blocking.top)
 					return true;
 			}
 		}
-		
+
 		return this._super(is, ie, js, je, blocking);
 	},
 	setSpeed: function(v) {
@@ -1656,11 +1656,11 @@ var Enemy = Figure.extend({
 		this.die();
 	},
 	hit: function(opponent) {
-		if(this.invisible)
+		if (this.invisible)
 			return;
-			
-		if(opponent instanceof Mario) {
-			if(opponent.vy < 0 && opponent.y - opponent.vy >= this.y + this.state * 32) {
+
+		if (opponent instanceof Mario) {
+			if (opponent.vy < 0 && opponent.y - opponent.vy >= this.y + this.state * 32) {
 				opponent.setVelocity(opponent.vx, constants.bounce);
 				this.hurt(opponent);
 			} else {
@@ -1685,44 +1685,44 @@ var Gumpa = Enemy.extend({
 	},
 	setVelocity: function(vx, vy) {
 		this._super(vx, vy);
-		
-		if(this.direction === directions.left) {
-			if(!this.setupFrames(6, 2, false, 'LeftWalk'))
+
+		if (this.direction === directions.left) {
+			if (!this.setupFrames(6, 2, false, 'LeftWalk'))
 				this.setImage(images.enemies, 34, 188);
 		} else {
-			if(!this.setupFrames(6, 2, true, 'RightWalk'))
+			if (!this.setupFrames(6, 2, true, 'RightWalk'))
 				this.setImage(images.enemies, 0, 228);
 		}
 	},
 	death: function() {
-		if(this.death_mode === death_modes.normal)
+		if (this.death_mode === death_modes.normal)
 			return --this.deathCount;
-		
+
 		this.view.css({ 'bottom' : (this.deathDir > 0 ? '+' : '-') + '=' + this.deathStep + 'px' });
 		this.deathCount += this.deathDir;
-		
-		if(this.deathCount === this.deathFrames)
+
+		if (this.deathCount === this.deathFrames)
 			this.deathDir = -1;
-		else if(this.deathCount === 0)
+		else if (this.deathCount === 0)
 			return false;
-			
+
 		return true;
 	},
 	die: function() {
 		this.clearFrames();
-		
-		if(this.death_mode === death_modes.normal) {
+
+		if (this.death_mode === death_modes.normal) {
 			this.level.playSound('enemy_die');
 			this.setImage(images.enemies, 102, 228);
 			this.deathCount = Math.ceil(600 / constants.interval);
-		} else if(this.death_mode === death_modes.shell) {
+		} else if (this.death_mode === death_modes.shell) {
 			this.level.playSound('shell');
 			this.setImage(images.enemies, 68, this.direction === directions.right ? 228 : 188);
 			this.deathFrames = Math.floor(250 / constants.interval);
 			this.deathDir = 1;
 			this.deathStep = Math.ceil(150 / this.deathFrames);
 		}
-		
+
 		this._super();
 	},
 }, 'ballmonster');
@@ -1745,19 +1745,19 @@ var TurtleShell = Enemy.extend({
 		this.show();
 	},
 	takeBack: function(where) {
-		if(where.setShell(this))
+		if (where.setShell(this))
 			this.clearFrames();
 	},
 	move: function() {
 		this._super();
 	},
 	hit: function(opponent) {
-		if(this.invisible)
+		if (this.invisible)
 			return;
-			
-		if(this.vx) {
-			if(opponent instanceof Mario) {
-				if(opponent.y >= this.y + this.height / 2) {
+
+		if (this.vx) {
+			if (opponent instanceof Mario) {
+				if (opponent.y >= this.y + this.height / 2) {
 					this.setSpeed(0);
 					opponent.setVelocity(opponent.vx, constants.bounce);
 				} else {
@@ -1768,29 +1768,29 @@ var TurtleShell = Enemy.extend({
 				opponent.die();
 			}
 		} else {
-			if(opponent instanceof Mario) {
+			if (opponent instanceof Mario) {
 				this.setSpeed(opponent.direction === directions.right ? -constants.shell_v : constants.shell_v);
 				opponent.setVelocity(opponent.vx, constants.bounce);
-			} else if(opponent instanceof GreenTurtle && opponent.state === size_states.small)
+			} else if (opponent instanceof GreenTurtle && opponent.state === size_states.small)
 				this.takeBack(opponent);
 		}
 	},
-	collides: function(is, ie, js, je, blocking) {		
-		if(is < 0 || ie >= this.level.obstacles.length)
+	collides: function(is, ie, js, je, blocking) {
+		if (is < 0 || ie >= this.level.obstacles.length)
 			return true;
-			
-		if(js < 0 || je >= this.level.getGridHeight())
+
+		if (js < 0 || je >= this.level.getGridHeight())
 			return false;
-			
+
 		for(var i = is; i <= ie; i++) {
 			for(var j = je; j >= js; j--) {
 				var obj = this.level.obstacles[i][j];
-				
-				if(obj && ((obj.blocking & blocking) === blocking))
+
+				if (obj && ((obj.blocking & blocking) === blocking))
 					return true;
 			}
 		}
-		
+
 		return false;
 	},
 }, 'shell');
@@ -1818,9 +1818,9 @@ var GreenTurtle = Enemy.extend({
 		this.setShell(new TurtleShell(x, y, level));
 	},
 	setShell: function(shell) {
-		if(this.shell || this.wait)
+		if (this.shell || this.wait)
 			return false;
-			
+
 		this.shell = shell;
 		shell.hide();
 		this.setState(size_states.big);
@@ -1828,8 +1828,8 @@ var GreenTurtle = Enemy.extend({
 	},
 	setState: function(state) {
 		this._super(state);
-		
-		if(state === size_states.big)
+
+		if (state === size_states.big)
 			this.setSpeed(constants.big_turtle_v);
 		else
 			this.setSpeed(constants.small_turtle_v);
@@ -1839,47 +1839,47 @@ var GreenTurtle = Enemy.extend({
 		var rewind = this.direction === directions.right;
 		var coords = this.walkSprites[this.state - 1][rewind ? 1 : 0];
 		var label = Math.sign(vx) + '-' + this.state;
-		
-		if(!this.setupFrames(6, 2, rewind, label))
+
+		if (!this.setupFrames(6, 2, rewind, label))
 			this.setImage(images.enemies, coords.x, coords.y);
 	},
 	die: function() {
 		this._super();
 		this.clearFrames();
-		
-		if(this.deathMode === death_modes.normal) {
+
+		if (this.deathMode === death_modes.normal) {
 			this.level.playSound('enemy_die');
 			this.deathFrames = Math.floor(600 / constants.interval);
 			this.setImage(images.enemies, 102, 437);
-		} else if(this.deathMode === death_modes.shell) {
+		} else if (this.deathMode === death_modes.shell) {
 			this.level.playSound('shell');
 			this.setImage(images.enemies, 68, (this.state === size_states.small ? (this.direction === directions.right ? 437 : 382) : 325));
 		}
 	},
 	death: function() {
-		if(this.deathMode === death_modes.normal)
+		if (this.deathMode === death_modes.normal)
 			return --this.deathFrames;
-			
+
 		this.view.css({ 'bottom' : (this.deathDir > 0 ? '+' : '-') + '=' + (this.deathDir > 0 ? this.deathStepUp : this.deathStepDown) + 'px' });
 		this.deathCount += this.deathDir;
-		
-		if(this.deathCount === this.deathFrames)
+
+		if (this.deathCount === this.deathFrames)
 			this.deathDir = -1;
-		else if(this.deathCount === 0)
+		else if (this.deathCount === 0)
 			return false;
-			
+
 		return true;
 	},
 	move: function() {
-		if(this.wait)
+		if (this.wait)
 			this.wait--;
-			
+
 		this._super();
 	},
-	hurt: function(opponent) {		
-		if(this.state === size_states.small)
+	hurt: function(opponent) {
+		if (this.state === size_states.small)
 			return this.die();
-		
+
 		this.level.playSound('enemy_die');
 		this.wait = constants.shell_wait;
 		this.setState(size_states.small);
@@ -1887,7 +1887,7 @@ var GreenTurtle = Enemy.extend({
 		this.shell = undefined;
 	},
 	hit: function(opponent) {
-		if(this.wait)
+		if (this.wait)
 			return;
 
 		this._super(opponent);
@@ -1912,24 +1912,24 @@ var SpikedTurtle = Enemy.extend({
 	},
 	setVelocity: function(vx, vy) {
 		this._super(vx, vy);
-		
-		if(this.direction === directions.left) {
-			if(!this.setupFrames(4, 2, true, 'LeftWalk'))
+
+		if (this.direction === directions.left) {
+			if (!this.setupFrames(4, 2, true, 'LeftWalk'))
 				this.setImage(images.enemies, 0, 106);
 		} else {
-			if(!this.setupFrames(6, 2, false, 'RightWalk'))
+			if (!this.setupFrames(6, 2, false, 'RightWalk'))
 				this.setImage(images.enemies, 34, 147);
 		}
 	},
 	death: function() {
 		this.view.css({ 'bottom' : (this.deathDir > 0 ? '+' : '-') + '=' + (this.deathDir > 0 ? this.deathStepUp : this.deathStepDown) + 'px' });
 		this.deathCount += this.deathDir;
-		
-		if(this.deathCount === this.deathFrames)
+
+		if (this.deathCount === this.deathFrames)
 			this.deathDir = -1;
-		else if(this.deathCount === 0)
+		else if (this.deathCount === 0)
 			return false;
-			
+
 		return true;
 	},
 	die: function() {
@@ -1939,10 +1939,10 @@ var SpikedTurtle = Enemy.extend({
 		this.setImage(images.enemies, 68, this.direction === directions.left ? 106 : 147);
 	},
 	hit: function(opponent) {
-		if(this.invisible)
+		if (this.invisible)
 			return;
-			
-		if(opponent instanceof Mario) {
+
+		if (opponent instanceof Mario) {
 			opponent.hurt(this);
 		}
 	},
@@ -1960,10 +1960,10 @@ var Ghost = Enemy.extend({
 		this.setMode(ghost_mode.sleep, directions.left);
 	},
 	die: function() {
-        //Do nothing here!
-    },
+		//Do nothing here!
+	},
 	setMode: function(mode, direction) {
-		if(this.mode !== mode || this.direction !== direction) {
+		if (this.mode !== mode || this.direction !== direction) {
 			this.mode = mode;
 			this.direction = direction;
 			this.setImage(images.ghost, 33 * (mode + direction - 1), 0);
@@ -1971,21 +1971,21 @@ var Ghost = Enemy.extend({
 	},
 	move: function() {
 		var mario = this.level.mario;
-		
-		if(mario && Math.abs(this.x - mario.x) <= 800) {
+
+		if (mario && Math.abs(this.x - mario.x) <= 800) {
 			var dx = Math.sign(mario.x - this.x);
 			var dy = Math.sign(mario.y - this.y) * 0.5;
 			var direction = dx ? dx + 2 : this.direction;
 			var mode = mario.direction === direction ? ghost_mode.awake : ghost_mode.sleep;
 			this.setMode(mode, direction);
-			
-			if(mode)		
+
+			if (mode)
 				this.setPosition(this.x + dx, this.y + dy);
-		} else 
+		} else
 			this.setMode(ghost_mode.sleep, this.direction);
 	},
-	hit: function(opponent) {			
-		if(opponent instanceof Mario) {
+	hit: function(opponent) {
+		if (opponent instanceof Mario) {
 			opponent.hurt(this);
 		}
 	},
@@ -2012,10 +2012,10 @@ var Plant = Enemy.extend({
 		this._super();
 	},
 	hit: function(opponent) {
-		if(this.invisible)
+		if (this.invisible)
 			return;
-			
-		if(opponent instanceof Mario) {
+
+		if (opponent instanceof Mario) {
 			opponent.hurt(this);
 		}
 	},
@@ -2042,12 +2042,12 @@ var StaticPlant = Plant.extend({
 	death: function() {
 		this.view.css({ 'bottom' : (this.deathDir > 0 ? '+' : '-') + '=' + (this.deathDir > 0 ? this.deathStepUp : this.deathStepDown) + 'px' });
 		this.deathCount += this.deathDir;
-		
-		if(this.deathCount === this.deathFrames)
+
+		if (this.deathCount === this.deathFrames)
 			this.deathDir = -1;
-		else if(this.deathCount === 0)
+		else if (this.deathCount === 0)
 			return false;
-			
+
 		return true;
 	},
 }, 'staticplant');
@@ -2075,64 +2075,65 @@ var PipePlant = Plant.extend({
 	setGridPosition: function(x, y) {
 		this.i = Math.floor(x / 32);
 		this.j = Math.ceil(this.level.getGridHeight() - 1 - (y + 6) / 32);
-		
-		if(this.j > this.level.getGridHeight())
+
+		if (this.j > this.level.getGridHeight())
 			this.die();
 	},
 	setDirection: function(dir) {
 		this.direction = dir;
 	},
 	setPosition: function(x, y) {
-		if(y === this.bottom || y === this.top) {
+		if (y === this.bottom || y === this.top) {
 			this.minimum = constants.pipeplant_count;
 			this.setDirection(this.direction === directions.up ? directions.down : directions.up);
 		}
-		
+
 		this._super(x, y);
 	},
 	blocked: function() {
-		if(this.y === this.bottom) {
+		if (this.y === this.bottom) {
 			var state = false;
 			this.y += 48;
-			
+
 			for(var i = this.level.figures.length; i--; ) {
-				if(this.level.figures[i] != this && q2q(this.level.figures[i], this)) {
+				if (this.level.figures[i] != this && q2q(this.level.figures[i], this)) {
 					state = true;
 					break;
 				}
 			}
-			
+
 			this.y -= 48;
 			return state;
 		}
-		
+
 		return false;
 	},
 	move: function() {
-		if(this.minimum === 0) {
-			if(!this.blocked())
+		if (this.minimum === 0) {
+			if (!this.blocked())
 				this.setPosition(this.x, this.y - (this.direction - 3) * constants.pipeplant_v);
 		} else
 			this.minimum--;
 	},
-	die: function() {		
+	die: function() {
 		this._super();
 		this.setImage(images.enemies, 68, 56);
 	},
 	death: function() {
-		if(this.deathFramesExtendedActive) {
+		if (this.deathFramesExtendedActive) {
 			this.setPosition(this.x, this.y - 8);
 			return --this.deathFramesExtended;
 		}
-		
+
 		this.view.css({ 'bottom' : (this.deathDir > 0 ? '+' : '-') + '=' + this.deathStep + 'px' });
 		this.deathCount += this.deathDir;
-		
-		if(this.deathCount === this.deathFrames)
+
+		if (this.deathCount === this.deathFrames)
 			this.deathDir = -1;
-		else if(this.deathCount === 0)
+		else if (this.deathCount === 0)
 			this.deathFramesExtendedActive = true;
-			
+
 		return true;
 	},
 }, 'pipeplant');
+

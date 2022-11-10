@@ -45,37 +45,37 @@ var Editor = Level.extend({
 			data: data
 		});
 	},
-    adjustRaw: function() {
-        var overlap = this.raw.width - this.raw.data.length;
+	adjustRaw: function() {
+		var overlap = this.raw.width - this.raw.data.length;
 
-        if(overlap > 0) {
-            for(var i = overlap; i--; ) {
-                var t = [];
+		if (overlap > 0) {
+			for(var i = overlap; i--; ) {
+				var t = [];
 
-                for(var j = 15; j--; )
-                    t.push('');
+				for(var j = 15; j--; )
+					t.push('');
 
-                this.raw.data.push(t);
-            }
-        } else if(overlap < 0)
-            this.raw.data.splice(this.raw.width);
+				this.raw.data.push(t);
+			}
+		} else if (overlap < 0)
+			this.raw.data.splice(this.raw.width);
 
-        return this.raw;
-    },
+		return this.raw;
+	},
 	save: function() {
 		return JSON.stringify(this.raw);
 	},
-    changeWidth: function(w) {
-        this.raw.width = w;
-        var data = this.adjustRaw();
-        this.load(data);
-    },
+	changeWidth: function(w) {
+		this.raw.width = w;
+		var data = this.adjustRaw();
+		this.load(data);
+	},
 	setSize: function(w, h) {
 		this._super(w, h);
 		this.generateGrid();
 	},
 	setImage: function(index) {
-		if(this.raw)
+		if (this.raw)
 			this.raw.background = index;
 
 
@@ -87,7 +87,7 @@ var Editor = Level.extend({
 		c.canvas.height = this.height;
 		c.clearRect(0, 0, c.canvas.width, c.canvas.height);
 
-		if(this.grid) {
+		if (this.grid) {
 			for(var i = 32; i < this.width; i += 32) {
 				c.moveTo(i, 0);
 				c.lineTo(i, 480);
@@ -119,14 +119,14 @@ var Editor = Level.extend({
 			this.raw.data[xs[i]][ys[i]] = values[i];
 		}
 
-		if(!noUndo)
+		if (!noUndo)
 			this.pushUndoList(t);
 	},
 	addItem: function(name, x, y, noUndo) {
-        if(x < 0 || x >= this.raw.width)
-            return;
+		if (x < 0 || x >= this.raw.width)
+			return;
 
-		if(name === 'mario' && this.mario) {
+		if (name === 'mario' && this.mario) {
 			var oldx = this.mario.i;
 			var oldy = this.mario.j;
 			this.mario.view.remove();
@@ -138,21 +138,21 @@ var Editor = Level.extend({
 		this.removeView(x, y);
 		var t = new (reflection[name])(32 * x, 448 - 32 * y, this);
 
-		if(t.onDrop && t.onDrop(x, y))
+		if (t.onDrop && t.onDrop(x, y))
 			return;
 
 		var names = [];
 		var xarr = [];
 		var yarr = [];
 
-		if(t.width_blocks && t.height_blocks && t.master) {
+		if (t.width_blocks && t.height_blocks && t.master) {
 			var w2 = t.width_blocks / 2;
 			var h2 = t.height_blocks / 2;
 			name = t.master;
 
 			for(var xi = Math.ceil(x - w2); xi < Math.ceil(x + w2); xi++) {
-                if(xi < 0 || xi >= this.raw.width)
-                    continue;
+				if (xi < 0 || xi >= this.raw.width)
+					continue;
 
 				for(var yi = Math.ceil(y - h2); yi < Math.ceil(y + h2); yi++) {
 					names.push(name);
@@ -175,14 +175,14 @@ var Editor = Level.extend({
 		this.setItem('', x, y, noUndo);
 	},
 	removeView: function(x, y) {
-		if(this.obstacles[x][y]) {
+		if (this.obstacles[x][y]) {
 			this.obstacles[x][y].view.remove();
 			this.obstacles[x][y] = undefined;
 		} else {
 			for(var i = this.figures.length; i--; ) {
 				var gp = this.figures[i].getGridPosition();
 
-				if(gp.i === x && gp.j === y) {
+				if (gp.i === x && gp.j === y) {
 					this.figures[i].view.remove();
 					this.figures.splice(i, 1);
 				}
@@ -196,14 +196,14 @@ var Editor = Level.extend({
 		return this.undoList.pop();
 	},
 	undo: function() {
-		if(this.undoList.length) {
+		if (this.undoList.length) {
 			var action = this.popUndoList();
 
 			for(var i = 0, n = action.length; i < n; i++) {
 				var x = action[i].x;
 				var y = action[i].y;
 
-				if(action[i].name)
+				if (action[i].name)
 					this.addItem(action[i].name, x, y, true);
 				else
 					this.removeItem(x, y, true);
@@ -218,9 +218,9 @@ var Editor = Level.extend({
 		//Left blank intentionally...
 		//This is just to override (and disable) the parent pause();
 	},
-    toggleGrid: function() {
-        this.grid ? this.gridOff() : this.gridOn();
-    },
+	toggleGrid: function() {
+		this.grid ? this.gridOff() : this.gridOn();
+	},
 	gridOn: function() {
 		this.grid = true;
 		this.generateGrid();
@@ -254,7 +254,7 @@ var ToolBox = Level.extend({
 		this.obstacles = [];
 
 		for(var ref in reflection) {
-			if(!names || names.indexOf(ref) !== -1) {
+			if (!names || names.indexOf(ref) !== -1) {
 				this.obstacles.push([]);
 				var t = new (reflection[ref])(x, 0, this);
 				t.view.addClass('block').draggable({

@@ -1,8 +1,8 @@
 ﻿@font-face {
-   font-family: 'SMB';
-   src: local('Super Mario Bros.'),
-        url('fonts/Super Mario Bros.ttf') format('truetype');
-   font-style: normal;
+	font-family: 'SMB';
+	src: local('Super Mario Bros.'),
+		url('fonts/Super Mario Bros.ttf') format('truetype');
+	font-style: normal;
 }
 
 #game, #edit {
@@ -13,11 +13,11 @@
 	width: 640px; position: absolute; left: 50%; top: 50%; margin-left: -321px;
 	margin-top: 282px; height: 128px; background: #ddd; border: 1px solid #ccc;
 }
-#world { 
+#world {
 	margin: 0; padding: 0; height: 100%; width: 100%; position: absolute;
 	bottom: 0; left: 0; z-index: 0;
 }
-#edit_world, #tool_world { 
+#edit_world, #tool_world {
 	margin: 0; padding: 0; position: relative; top: 0; left: 0; height: 100%; width: 100%;
 }
 .gauge {
@@ -49,7 +49,7 @@
 	margin: 0; padding: 0; z-index: 95; position: absolute; width: 32px; height: 32px;
 }
 .gameover {
-    margin: 0; height: 480px; width: 640px; background-color: rgba(0,218,255,0.7);
+	margin: 0; height: 480px; width: 640px; background-color: rgba(0,218,255,0.7);
 	position: absolute; top: 0;	z-index: 1001; text-align: center; color: #ffcd2c;
 	font-family: 'SMB'; font-size: 44px; font-weight: bold; line-height: 480px;
 }
@@ -60,10 +60,10 @@
 	z-index: 100;
 }
 .speech-bubble {
-    position: absolute; padding: 20px; margin: 1em 0 3em; color: #000; background: #fdfdfd; text-align: center;
-    border-radius: 100px; width: 160px; height: 25px; z-index: 100; font-size: 1.3em; border: 1px solid #ccc;
+	position: absolute; padding: 20px; margin: 1em 0 3em; color: #000; background: #fdfdfd; text-align: center;
+	border-radius: 100px; width: 160px; height: 25px; z-index: 100; font-size: 1.3em; border: 1px solid #ccc;
 }
 .speech-bubble:after {
-    content: ""; display: block; position: absolute; bottom: -14px; left: 92px; width: 0;
-    border-width: 15px 15px 0; border-style: solid; border-color: #fdfdfd transparent;
+	content: ""; display: block; position: absolute; bottom: -14px; left: 92px; width: 0;
+	border-width: 15px 15px 0; border-style: solid; border-color: #fdfdfd transparent;
 }

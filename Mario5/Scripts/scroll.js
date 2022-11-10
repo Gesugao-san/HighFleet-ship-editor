@@ -3,295 +3,295 @@
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
  *
  * Version: 0.5.0
- * 
+ *
  */
 (function($) {
   jQuery.fn.extend({
-    slimScroll: function(options) {
+	slimScroll: function(options) {
 
-      var defaults = {
-        wheelStep : 20,
-        width : 'auto',
-        height : '250px',
-        size : '7px',
-        color: '#000',
-        distance : '1px',
-        start : 'top',
-        opacity : .4,
-        alwaysVisible : false,
-        railVisible : false,
-        railColor : '#333',
-        railOpacity : '0.2',
-        railClass : 'slimScrollRail',
-        barClass : 'slimScrollBar',
-        wrapperClass : 'slimScrollDiv',
-        allowPageScroll: false,
-        scroll: 0
-      };
+	  var defaults = {
+		wheelStep : 20,
+		width : 'auto',
+		height : '250px',
+		size : '7px',
+		color: '#000',
+		distance : '1px',
+		start : 'top',
+		opacity : .4,
+		alwaysVisible : false,
+		railVisible : false,
+		railColor : '#333',
+		railOpacity : '0.2',
+		railClass : 'slimScrollRail',
+		barClass : 'slimScrollBar',
+		wrapperClass : 'slimScrollDiv',
+		allowPageScroll: false,
+		scroll: 0
+	  };
 
-      var o = ops = $.extend( defaults , options );
+	  var o = ops = $.extend( defaults , options );
 
-      // do it for every element that matches selector
-      this.each(function(){
+	  // do it for every element that matches selector
+	  this.each(function() {
 
-      var isOverPanel, isOverBar, isDragg, queueHide, barWidth, percentScroll,
-        minBarWidth = 30,
-        releaseScroll = false,
-        wheelStep = parseInt(o.wheelStep),
-        cwidth = o.width,
-        cheight = o.height,
-        size = o.size,
-        color = o.color,
-        distance = o.distance,
-        start = o.start,
-        opacity = o.opacity,
-        alwaysVisible = o.alwaysVisible,
-        railVisible = o.railVisible,
-        railColor = o.railColor,
-        railOpacity = o.railOpacity,
-        allowPageScroll = o.allowPageScroll,
-        scroll = o.scroll;
-      
-        // used in event handlers and for better minification
-        var me = $(this);
+	  var isOverPanel, isOverBar, isDragg, queueHide, barWidth, percentScroll,
+		minBarWidth = 30,
+		releaseScroll = false,
+		wheelStep = parseInt(o.wheelStep),
+		cwidth = o.width,
+		cheight = o.height,
+		size = o.size,
+		color = o.color,
+		distance = o.distance,
+		start = o.start,
+		opacity = o.opacity,
+		alwaysVisible = o.alwaysVisible,
+		railVisible = o.railVisible,
+		railColor = o.railColor,
+		railOpacity = o.railOpacity,
+		allowPageScroll = o.allowPageScroll,
+		scroll = o.scroll;
 
-        //ensure we are not binding it again
-        if (me.parent().hasClass('slimScrollDiv')) {
-            //check if we should scroll existing instance
-            if (scroll) {
-                //find bar and rail
-                bar = me.parent().find('.slimScrollBar');
-                rail = me.parent().find('.slimScrollRail');
+		// used in event handlers and for better minification
+		var me = $(this);
 
-                //scroll by given amount of pixels
-                scrollContent( me.scrollLeft() + parseInt(scroll), false, true);
-            }
+		//ensure we are not binding it again
+		if (me.parent().hasClass('slimScrollDiv')) {
+			//check if we should scroll existing instance
+			if (scroll) {
+				//find bar and rail
+				bar = me.parent().find('.slimScrollBar');
+				rail = me.parent().find('.slimScrollRail');
 
-            return;
-        }
+				//scroll by given amount of pixels
+				scrollContent( me.scrollLeft() + parseInt(scroll), false, true);
+			}
 
-        // wrap content
-        var wrapper = $(DIV)
-          .addClass( o.wrapperClass )
-          .css({
-            position: 'relative',
-            overflow: 'hidden',
-            width: cwidth,
-            height: cheight
-          });
+			return;
+		}
 
-        // update style for the div
-        me.css({
-          overflow: 'hidden',
-          width: cwidth,
-          height: cheight
-        });
+		// wrap content
+		var wrapper = $(DIV)
+		  .addClass( o.wrapperClass )
+		  .css({
+			position: 'relative',
+			overflow: 'hidden',
+			width: cwidth,
+			height: cheight
+		  });
 
-        // create scrollbar rail
-        var rail  = $(DIV)
-          .addClass( o.railClass )
-          .css({
-            height: size,
-            width: '100%',
-            position: 'absolute',
-            bottom: 0,
-            display: (alwaysVisible && railVisible) ? 'block' : 'none',
-            'border-radius': size,
-            background: railColor,
-            opacity: railOpacity,
-            zIndex: 300
-          });
+		// update style for the div
+		me.css({
+		  overflow: 'hidden',
+		  width: cwidth,
+		  height: cheight
+		});
 
-        // create scrollbar
-        var bar = $(DIV)
-          .addClass( o.barClass )
-          .css({
-            background: color,
-            height: size,
-            position: 'absolute',
-            bottom: 0,
-            opacity: opacity,
-            display: alwaysVisible ? 'block' : 'none',
-            'border-radius' : size,
-            BorderRadius: size,
-            MozBorderRadius: size,
-            WebkitBorderRadius: size,
-            zIndex: 400
-          });
+		// create scrollbar rail
+		var rail  = $(DIV)
+		  .addClass( o.railClass )
+		  .css({
+			height: size,
+			width: '100%',
+			position: 'absolute',
+			bottom: 0,
+			display: (alwaysVisible && railVisible) ? 'block' : 'none',
+			'border-radius': size,
+			background: railColor,
+			opacity: railOpacity,
+			zIndex: 300
+		  });
 
-        // set position
-        var posCss = { left: distance };
-        rail.css(posCss);
-        bar.css(posCss);
+		// create scrollbar
+		var bar = $(DIV)
+		  .addClass( o.barClass )
+		  .css({
+			background: color,
+			height: size,
+			position: 'absolute',
+			bottom: 0,
+			opacity: opacity,
+			display: alwaysVisible ? 'block' : 'none',
+			'border-radius' : size,
+			BorderRadius: size,
+			MozBorderRadius: size,
+			WebkitBorderRadius: size,
+			zIndex: 400
+		  });
 
-        // wrap it
-        me.wrap(wrapper);
+		// set position
+		var posCss = { left: distance };
+		rail.css(posCss);
+		bar.css(posCss);
 
-        // append to parent div
-        me.parent().append(bar);
-        me.parent().append(rail);
+		// wrap it
+		me.wrap(wrapper);
 
-        // make it draggable
-        bar.draggable({
-          axis: 'x', 
-          containment: 'parent',
-          start: function() { isDragg = true; },
-          stop: function() { isDragg = false; hideBar(); },
-          drag: function(e) { 
-            // scroll content
-            scrollContent(0, $(this).position().left, false);
-          }
-        });
+		// append to parent div
+		me.parent().append(bar);
+		me.parent().append(rail);
 
-        // on rail over
-        rail.hover(function() {
-          showBar();
-        }, function() {
-          hideBar();
-        });
+		// make it draggable
+		bar.draggable({
+		  axis: 'x',
+		  containment: 'parent',
+		  start: function() { isDragg = true; },
+		  stop: function() { isDragg = false; hideBar(); },
+		  drag: function(e) {
+			// scroll content
+			scrollContent(0, $(this).position().left, false);
+		  }
+		});
 
-        // on bar over
-        bar.hover(function() {
-          isOverBar = true;
-        }, function() {
-          isOverBar = false;
-        });
+		// on rail over
+		rail.hover(function() {
+		  showBar();
+		}, function() {
+		  hideBar();
+		});
 
-        // show on parent mouseover
-        me.hover(function() {
-          isOverPanel = true;
-          showBar();
-          hideBar();
-        }, function() {
-          isOverPanel = false;
-          hideBar();
-        });
+		// on bar over
+		bar.hover(function() {
+		  isOverBar = true;
+		}, function() {
+		  isOverBar = false;
+		});
 
-        var _onWheel = function(e) {
-          // use mouse wheel only when mouse is over
-          if (!isOverPanel) { return; }
+		// show on parent mouseover
+		me.hover(function() {
+		  isOverPanel = true;
+		  showBar();
+		  hideBar();
+		}, function() {
+		  isOverPanel = false;
+		  hideBar();
+		});
 
-          var e = e || window.event;
+		var _onWheel = function(e) {
+		  // use mouse wheel only when mouse is over
+		  if (!isOverPanel) { return; }
 
-          var delta = 0;
-          if (e.wheelDelta) { delta = -e.wheelDelta / 120; }
-          if (e.detail) { delta = e.detail / 3; }
+		  var e = e || window.event;
 
-          // scroll content
-          scrollContent(delta, true);
+		  var delta = 0;
+		  if (e.wheelDelta) { delta = -e.wheelDelta / 120; }
+		  if (e.detail) { delta = e.detail / 3; }
 
-          // stop window scroll
-          if (e.preventDefault && !releaseScroll) { e.preventDefault(); }
-          if (!releaseScroll) { e.returnValue = false; }
-        }
+		  // scroll content
+		  scrollContent(delta, true);
 
-        function scrollContent(y, isWheel, isJump) {
-          var delta = y;
+		  // stop window scroll
+		  if (e.preventDefault && !releaseScroll) { e.preventDefault(); }
+		  if (!releaseScroll) { e.returnValue = false; }
+		}
 
-          if (isWheel) {
-            // move bar with mouse wheel
-            delta = parseInt(bar.css('left')) + y * wheelStep / 100 * bar.outerWidth();
+		function scrollContent(y, isWheel, isJump) {
+		  var delta = y;
 
-            // move bar, make sure it doesn't go out
-            var maxTop = me.outerWidth() - bar.outerWidth();
-            delta = Math.min(Math.max(delta, 0), maxTop);
+		  if (isWheel) {
+			// move bar with mouse wheel
+			delta = parseInt(bar.css('left')) + y * wheelStep / 100 * bar.outerWidth();
 
-            // scroll the scrollbar
-            bar.css({ left: delta + 'px' });
-          }
+			// move bar, make sure it doesn't go out
+			var maxTop = me.outerWidth() - bar.outerWidth();
+			delta = Math.min(Math.max(delta, 0), maxTop);
 
-          // calculate actual scroll amount
-          percentScroll = parseInt(bar.css('left')) / (me.outerWidth() - bar.outerWidth());
-          delta = percentScroll * (me[0].scrollWidth - me.outerWidth());
+			// scroll the scrollbar
+			bar.css({ left: delta + 'px' });
+		  }
 
-          if (isJump) {
-            delta = y;
-            var offsetTop = delta / me[0].scrollWidth * me.outerWidth();
-            bar.css({ left: offsetTop + 'px' });
-          }
+		  // calculate actual scroll amount
+		  percentScroll = parseInt(bar.css('left')) / (me.outerWidth() - bar.outerWidth());
+		  delta = percentScroll * (me[0].scrollWidth - me.outerWidth());
 
-          // scroll content
-          me.scrollLeft(delta);
+		  if (isJump) {
+			delta = y;
+			var offsetTop = delta / me[0].scrollWidth * me.outerWidth();
+			bar.css({ left: offsetTop + 'px' });
+		  }
 
-          // ensure bar is visible
-          showBar();
+		  // scroll content
+		  me.scrollLeft(delta);
 
-          // trigger hide when scroll is stopped
-          hideBar();
-        }
+		  // ensure bar is visible
+		  showBar();
 
-        var attachWheel = function() {
-          if (window.addEventListener) {
-            this.addEventListener('DOMMouseScroll', _onWheel, false );
-            this.addEventListener('mousewheel', _onWheel, false );
-          } else
-            document.attachEvent("onmousewheel", _onWheel);
-        }
+		  // trigger hide when scroll is stopped
+		  hideBar();
+		}
 
-        // attach scroll events
-        attachWheel();
+		var attachWheel = function() {
+		  if (window.addEventListener) {
+			this.addEventListener('DOMMouseScroll', _onWheel, false );
+			this.addEventListener('mousewheel', _onWheel, false );
+		  } else
+			document.attachEvent("onmousewheel", _onWheel);
+		}
 
-        function getBarWidth() {
-          // calculate scrollbar height and make sure it is not too small
-          barWidth = Math.max((me.outerWidth() / me[0].scrollWidth) * me.outerWidth(), minBarWidth);
-          bar.css({ width: barWidth + 'px' });
-        }
+		// attach scroll events
+		attachWheel();
 
-        // set up initial height
-        getBarWidth();
+		function getBarWidth() {
+		  // calculate scrollbar height and make sure it is not too small
+		  barWidth = Math.max((me.outerWidth() / me[0].scrollWidth) * me.outerWidth(), minBarWidth);
+		  bar.css({ width: barWidth + 'px' });
+		}
 
-        function showBar() {
-          // recalculate bar height
-          getBarWidth();
-          clearTimeout(queueHide);
+		// set up initial height
+		getBarWidth();
 
-          // release wheel when bar reached top or bottom
-          releaseScroll = allowPageScroll && percentScroll == ~~ percentScroll;
-		  
-          // show only when required
-          if(barWidth >= me.outerWidth()) {
-            //allow window scroll
-            releaseScroll = true;
-            return;
-          }
-          bar.stop(true,true).fadeIn('fast');
-          if (railVisible) rail.stop(true,true).fadeIn('fast');
-        }
+		function showBar() {
+		  // recalculate bar height
+		  getBarWidth();
+		  clearTimeout(queueHide);
 
-        function hideBar() {
-          // only hide when options allow it
-          if (!alwaysVisible)
-          {
-            queueHide = setTimeout(function() {
-              if (!isOverBar && !isDragg) { 
-                bar.fadeOut('slow');
-                rail.fadeOut('slow');
-              }
-            }, 1000);
-          }
-        }
+		  // release wheel when bar reached top or bottom
+		  releaseScroll = allowPageScroll && percentScroll == ~~ percentScroll;
 
-        // check start position
-        if (start === 'bottom') {
-          // scroll content to bottom
-          bar.css({ top: me.outerWidth() - bar.outerWidth() });
-          scrollContent(0, true);
-        } else if (typeof start === 'object') {
-          // scroll content
-          scrollContent($(start).position().left, null, true);
+		  // show only when required
+		  if (barWidth >= me.outerWidth()) {
+			//allow window scroll
+			releaseScroll = true;
+			return;
+		  }
+		  bar.stop(true,true).fadeIn('fast');
+		  if (railVisible) rail.stop(true,true).fadeIn('fast');
+		}
 
-          // make sure bar stays hidden
-          if (!alwaysVisible) bar.hide();
-        }
-      });
-      
-      // maintain chainability
-      return this;
-    }
+		function hideBar() {
+		  // only hide when options allow it
+		  if (!alwaysVisible)
+		  {
+			queueHide = setTimeout(function() {
+			  if (!isOverBar && !isDragg) {
+				bar.fadeOut('slow');
+				rail.fadeOut('slow');
+			  }
+			}, 1000);
+		  }
+		}
+
+		// check start position
+		if (start === 'bottom') {
+		  // scroll content to bottom
+		  bar.css({ top: me.outerWidth() - bar.outerWidth() });
+		  scrollContent(0, true);
+		} else if (typeof start === 'object') {
+		  // scroll content
+		  scrollContent($(start).position().left, null, true);
+
+		  // make sure bar stays hidden
+		  if (!alwaysVisible) bar.hide();
+		}
+	  });
+
+	  // maintain chainability
+	  return this;
+	}
   });
 
   jQuery.fn.extend({
-    slimscroll: jQuery.fn.slimScroll
+	slimscroll: jQuery.fn.slimScroll
   });
 
 })(jQuery);
