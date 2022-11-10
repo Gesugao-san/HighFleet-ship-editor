@@ -1,0 +1,45 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Super Mario HTML5 Test Editor</title>
+<link href="Content/style.css" rel="stylesheet" />
+</head>
+<body>
+<div id="edit">
+<div id="edit_world">
+</div>
+</div>
+<div id="tool">
+<div id="tool_world">
+</div>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="Scripts/jqueryui.js"></script>
+<script src="Scripts/testlevels.js"></script>
+<script src="Scripts/oop.js"></script>
+<script src="Scripts/constants.js"></script>
+<script src="Scripts/main.js"></script>
+<script src="Scripts/editor.js"></script>
+<script src="Scripts/scroll.js"></script>
+<script>
+/*
+ * -------------------------------------------
+ * DOCUMENT READY STARTUP METHOD
+ * -------------------------------------------
+ */
+// just that you can play around with the object from the JS console of your browser ...
+var GLOBAL; //e.g. try GLOBAL.save(); to see the JSON string (serialized from the level)
+
+$(document).ready(function() {
+	var edit = new Editor('edit_world');
+	edit.load(definedLevels[0]);
+	edit.gridOn();
+	var toolbox = new ToolBox('tool_world', edit);
+	toolbox.load();
+	GLOBAL = edit;
+});
+</script>
+</body>
+</html>
